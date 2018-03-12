@@ -17,27 +17,9 @@
 #include "librtmp/rtmp_sys.h"
 #include "librtmp/log.h"
 
-int InitSockets()
-{
-#ifdef WIN32
-	WORD version;
-	WSADATA wsaData;
-	version = MAKEWORD(1, 1);
-	return (WSAStartup(version, &wsaData) == 0);
-#endif
-}
-
-void CleanupSockets()
-{
-#ifdef WIN32
-	WSACleanup();
-#endif
-}
 
 int main(int argc, char* argv[])
 {
-	InitSockets();
-	
 	double duration=-1;
 	int nRead;
 	//is live stream ?
@@ -52,7 +34,6 @@ int main(int argc, char* argv[])
 	FILE *fp=fopen("receive.flv","wb");
 	if (!fp){
 		RTMP_LogPrintf("Open File Error.\n");
-		CleanupSockets();
 		return -1;
 	}
 	
@@ -69,7 +50,6 @@ int main(int argc, char* argv[])
 	{
 		RTMP_Log(RTMP_LOGERROR,"SetupURL Err\n");
 		RTMP_Free(rtmp);
-		CleanupSockets();
 		return -1;
 	}
 	if (bLiveStream){
@@ -82,7 +62,6 @@ int main(int argc, char* argv[])
 	if(!RTMP_Connect(rtmp,NULL)){
 		RTMP_Log(RTMP_LOGERROR,"Connect Err\n");
 		RTMP_Free(rtmp);
-		CleanupSockets();
 		return -1;
 	}
 
@@ -90,7 +69,6 @@ int main(int argc, char* argv[])
 		RTMP_Log(RTMP_LOGERROR,"ConnectStream Err\n");
 		RTMP_Close(rtmp);
 		RTMP_Free(rtmp);
-		CleanupSockets();
 		return -1;
 	}
 
@@ -111,7 +89,6 @@ int main(int argc, char* argv[])
 	if(rtmp){
 		RTMP_Close(rtmp);
 		RTMP_Free(rtmp);
-		CleanupSockets();
 		rtmp=NULL;
 	}	
 	return 0;
