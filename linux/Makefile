@@ -1,5 +1,19 @@
-simplest_librtmp_receive: simplest_librtmp_receive.c
-	gcc -o $@ $^ -I include -lrtmp
+CC=gcc
+CFLAGS=-I include -Wall -g
+LIBS=-lrtmp
+
+RM=rm
+
+TARGET=simplest_librtmp_receive
+OBJ=simplest_librtmp_receive.o
+SRC=simplest_librtmp_receive.c
+
+
+all: $(OBJ)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ) $(LIBS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -f simplest_librtmp_receive
+	$(RM) -f $(TARGET) $(OBJ) *~
