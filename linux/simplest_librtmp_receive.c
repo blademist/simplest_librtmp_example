@@ -66,15 +66,17 @@ int main(int argc, char* argv[])
 	memset(buf, 0, bufsize);
 
 	FILE *fp = fopen(output, "wb");
-	if (!fp) {
+	if(!fp) {
 		RTMP_LogPrintf("Open File Error.\n");
 		free(buf);
 		return -1;
 	}
 
+#ifdef DEBUG
 	/* set log level */
-	//RTMP_LogLevel loglvl = RTMP_LOGDEBUG;
-	//RTMP_LogSetLevel(loglvl);
+	RTMP_LogLevel loglvl = RTMP_LOGDEBUG;
+	RTMP_LogSetLevel(loglvl);
+#endif
 
 	RTMP *rtmp = RTMP_Alloc();
 	RTMP_Init(rtmp);
@@ -83,7 +85,7 @@ int main(int argc, char* argv[])
 	rtmp->Link.timeout = 10;
 
 	if(!RTMP_SetupURL(rtmp, live_url)) {
-		RTMP_Log(RTMP_LOGERROR,"SetupURL Err\n");
+		RTMP_Log(RTMP_LOGERROR, "SetupURL Err\n");
 		RTMP_Free(rtmp);
 		free(buf);
 		fclose(fp);
@@ -97,8 +99,8 @@ int main(int argc, char* argv[])
 	/* 1 hour */
 	RTMP_SetBufferMS(rtmp, 3600*1000);
 
-	if(!RTMP_Connect(rtmp,NULL)) {
-		RTMP_Log(RTMP_LOGERROR,"Connect Err\n");
+	if(!RTMP_Connect(rtmp, NULL)) {
+		RTMP_Log(RTMP_LOGERROR, "Connect Err\n");
 		RTMP_Free(rtmp);
 		free(buf);
 		fclose(fp);

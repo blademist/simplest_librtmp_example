@@ -1,5 +1,6 @@
 CC=gcc
 CFLAGS=-I include -Wall -g
+#CFLAGS=-I include -Wall -g -DDEBUG
 LIBS=-lrtmp
 
 RM=rm
